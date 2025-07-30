@@ -1,123 +1,79 @@
-Real-Time Object Detection from Video Streams
-This repository contains a Python-based real-time object detection application designed to identify and localize objects within video streams using the powerful YOLOv5 model. This project demonstrates a practical application of deep learning and computer vision for dynamic visual analysis.
+COVID-19 US Confirmed Cases Time-Series Visualization
+This project generates an engaging animated GIF that visualizes the progression of confirmed COVID-19 cases across US counties over time. Leveraging public health data and geospatial libraries, it provides a dynamic view of the pandemic's spread.
 
-🌟 Overview
-This application processes video footage frame by frame, leveraging a pre-trained YOLOv5 model to detect various objects. The detected objects are highlighted with bounding boxes and displayed in real-time, offering an intuitive and dynamic visualization of object presence and location. The project emphasizes efficiency and ease of use, making it suitable for quick deployment and experimentation.
+Overview
+The script automates the process of fetching time-series COVID-19 data, merging it with US county geographical boundaries, generating individual map frames, and compiling these frames into an animated GIF. It's designed for efficiency, utilizing parallel processing to speed up frame generation.
 
-✨ Features
-Instantaneous Object Detection: Achieves near real-time performance in identifying and localizing multiple objects in video streams.
+Features
+Animated Time Series: Visualizes the spread of COVID-19 confirmed cases across US counties over chosen time intervals.
+County-Level Granularity: Provides detailed insights by displaying data at the county level.
+Optimized Performance:
+Parallel Processing: Utilizes joblib to generate map frames concurrently across multiple CPU cores, significantly speeding up the visualization process.
+In-Memory Frame Generation: Avoids repetitive disk I/O by generating and processing image data in memory before GIF compilation.
+Customizable Output: Easily adjust animation speed (frames per second), image resolution (DPI), and the time interval between frames.
+Dark Mode Aesthetic Capabilities: Configure with a black background for a modern and distinct visual style.
+Automated Cleanup: Deletes temporary image files after the GIF is created to conserve storage.
+How It Works
+The visualization is created through the following steps:
 
-High-Performance Model Integration: Utilizes the highly optimized YOLOv5s model from Ultralytics, known for its excellent balance of speed and accuracy.
+Data Loading: Confirmed COVID-19 cases time-series data is loaded from the Johns Hopkins University CSSE GitHub repository.
+Map Data Preparation: US county boundary shapefile data is loaded and preprocessed using geopandas.
+Frame Generation (Parallel):
+For each selected date (e.g., every 3rd or 30th day), the script extracts relevant case data.
+This data is merged with the geographical county information.
+A choropleth map is then generated, colored based on the number of confirmed cases, with a black background.
+The generated map is captured directly into memory as an image array.
+This process runs in parallel for all selected dates.
+GIF Compilation: All in-memory image arrays are collected and assembled into a single animated GIF using imageio.
+Display & Cleanup: The final GIF is displayed directly in the execution environment (e.g., Google Colab), and all intermediate frame data is automatically deleted.
+Setup and Installation
+Recommended: Google Colaboratory
+This project is ideally suited for Google Colab, as it provides a free environment with pre-installed libraries and sufficient computing resources for most runs.
 
-Versatile Video Input: Supports processing of pre-recorded video files and can be easily adapted for live camera feeds (e.g., webcam, CCTV streams).
+Upload Shapefile: Upload the US county shapefile (cb_2018_us_county_500k.shp) to your Colab session (e.g., into the /content/sample_data/ folder, or adjust the path in the code).
+Run Cells: Simply paste the provided Python code into a Colab notebook cell and run it.
+Local Environment
+If you prefer to run the project locally, ensure you have Python 3.7+ installed along with the following libraries. It's often recommended to use a virtual environment.
 
-Clear Visual Output: Renders bounding boxes and detection results directly onto the video frames using OpenCV, providing immediate and intuitive visual feedback.
-
-Pythonic & Modular Design: Built with clear, well-structured Python code, ensuring maintainability, readability, and extensibility.
-
-🚀 How It Works
-The core of this real-time object detection system operates through a streamlined pipeline:
-
-Model Loading: A pre-trained yolov5s model is loaded directly from PyTorch Hub using torch.hub.load. This provides robust object recognition capabilities without requiring local model weights.
-
-Video Stream Capture: The cv2.VideoCapture function from OpenCV is used to open and capture video frames sequentially from the specified video file.
-
-Real-Time Inference: Each captured frame is passed as input to the loaded YOLOv5 model. The model then performs rapid inference to detect objects within that frame.
-
-Result Rendering: The detection results (which include bounding box coordinates, class labels, and confidence scores) are processed. OpenCV's drawing functionalities are then used to overlay these bounding boxes and labels directly onto the original video frame.
-
-Live Visualization: The annotated frames are displayed in a dedicated window using cv2.imshow, providing a continuous, real-time visual feed of detected objects. The process continues in a loop until the user explicitly quits.
-
-🛠️ Setup and Installation
-To get this project up and running on your local machine, follow these steps:
-
-Prerequisites
-Python 3.7+ installed.
-
-git installed and configured on your system.
-
-Steps
-Clone the YOLOv5 Repository:
-First, clone the official Ultralytics YOLOv5 repository, as this project relies on its structure and dependencies.
-
-git clone https://github.com/ultralytics/yolov5
-cd yolov5
-
+Download Shapefile: Download the cb_2018_us_county_500k.shp file (and its accompanying .dbf, .shx, .prj, etc., files) from the US Census Bureau website and place them in your project directory.
 Install Dependencies:
-Navigate into the yolov5 directory and install all required Python packages listed in requirements.txt. This includes torch, opencv-python, matplotlib, numpy, and others.
-
-pip install -r requirements.txt
-
-(Note: This step might take some time as it downloads PyTorch and other large libraries. A stable internet connection is recommended.)
-
-Place Your Video File:
-Place the video file you wish to analyze (e.g., Motorway CCTV - 4 Split - 10mins - 1280 x 720.mp4) in a location accessible by your Python script. You will need to update the video variable in your script (your_script_name.py) with the correct, full path to your video file.
-
-🏃 Usage
-Once the setup is complete, you can run the real-time object detection application:
-
-Navigate to your script's directory:
-Open your terminal or command prompt and change your current directory to where your Python script (your_script_name.py) is saved.
-
-cd path/to/your/script
-
-Execute the Script:
-Run the Python script using the Python interpreter.
-
+pip install pandas geopandas matplotlib mapclassify imageio joblib numpy
+(Note: geopandas can sometimes be complex to install locally due to its geospatial dependencies. Using conda or referring to the Geopandas installation guide might be helpful if you encounter issues.)
+Run Script: Execute your Python script from your terminal:
 python your_script_name.py
+Usage
+Execute the Code: Run all the cells in your Google Colab notebook or execute the Python script.
+Monitor Progress: The script will print messages to the console indicating which frame it's processing.
+View Output:
+Upon completion, the animated GIF (covid_animation.gif) will be displayed directly within your notebook's output cell.
+The GIF file will also be saved to the main directory of your Colab session (or your script's directory if running locally), allowing you to download or share it.
+Customization Options
+You can easily modify the animation's behavior and appearance by adjusting parameters in the code:
 
-(Replace your_script_name.py with the actual name of your Python file.)
-
-View Detections:
-A new window will appear, displaying the video stream with bounding boxes drawn around detected objects in real-time.
-
-Exit the Application:
-To close the detection window and stop the script, simply press the 'q' key on your keyboard.
-
-⚙️ Customization Options
-This project is designed to be easily customizable:
-
-Video Source:
-Modify the video variable in the script to change the input source. You can use:
-
-A different video file path: video = "path/to/your/new_video.mp4"
-
-A live webcam feed: cap = cv2.VideoCapture(0) (for the default webcam).
-
-YOLOv5 Model Size:
-Experiment with different YOLOv5 model sizes (e.g., 'yolov5n', 'yolov5m', 'yolov5l', 'yolov5x') by changing the argument in model = torch.hub.load('ultralytics/yolov5', 'yolov5s'). Larger models offer higher accuracy but require more computational resources.
-
-Confidence Thresholds:
-(Requires minor code modification) You can add a confidence threshold to filter out less certain detections. This involves accessing the results.pandas().xyxy[0] dataframe and filtering rows based on the 'conf' column before rendering.
-
-💡 Skills Demonstrated
-This project is a strong showcase of my capabilities in:
-
-Python Programming: Developing robust, efficient, and well-structured applications.
-
-Deep Learning: Practical implementation and application of state-of-the-art neural network architectures (YOLOv5).
-
-Computer Vision (CV): Hands-on experience with video processing, image manipulation, and real-time visual output using OpenCV.
-
-PyTorch: Proficiency in loading and performing inference with deep learning models.
-
-Model Integration: Seamlessly integrating complex pre-trained models into custom software solutions.
-
-Real-time Systems: Designing and implementing applications that process and respond to data continuously and instantaneously.
-
-Problem Solving: Applying technical knowledge to address real-world challenges in visual data analysis.
-
-🌐 Potential Applications
-The real-time object detection capability developed in this project has a wide range of practical applications across various industries:
-
-Intelligent Transportation Systems (ITS): Traffic flow analysis, congestion monitoring, accident detection, and pedestrian safety.
-
-Security & Surveillance: Automated monitoring of premises, anomaly detection, and tracking of objects or individuals of interest.
-
-Retail Analytics: Understanding customer behavior, optimizing store layouts, and managing inventory.
-
-Industrial Automation: Quality control on production lines, safety compliance monitoring, and asset tracking.
-
-Sports Analytics: Automated tracking of players, balls, and other equipment for performance analysis and broadcast enhancements.
-
-Feel free to explore the code, experiment with different video sources, and adapt it to your own computer vision projects!
+Frame Interval (dates_to_process):
+Located in the Merging Data Set With US Map section.
+Change dates_to_process = all_date_columns[::30] to:
+::1 for every single day (slowest, most frames).
+::7 for every week.
+::14 for every two weeks.
+A larger number results in fewer frames and a faster overall process.
+Animation Speed (FPS):
+Located in the Animation Output section.
+Modify fps=1 in imageio.get_writer(...).
+fps=10 makes the animation play 10 frames per second (faster).
+fps=1 makes it play 1 frame per second (slower, default for this code).
+Image Quality/Resolution (DPI):
+Located within the generate_single_frame function.
+Adjust dpi=50 in plt.savefig(..., dpi=50, ...).
+Lower DPI (e.g., 30) means faster processing and smaller GIF size, but lower image quality.
+Higher DPI (e.g., 100) means better quality but slower processing and larger GIF size.
+Map Size (figsize):
+Located within the generate_single_frame function.
+Modify figsize=(12, 7) in plt.subplots(...) to change the width and height of each map image.
+Number of Parallel Workers (n_jobs):
+Located in the Merging Data Set With US Map section (in the Parallel call).
+n_jobs=-1 (default) uses all available CPU cores, recommended for maximum speed.
+You can set a specific number (e.g., n_jobs=4) if you want to limit worker count.
+Background Color:
+Located within the generate_single_frame function.
+The current code sets the background to black (facecolor='black' and ax.set_facecolor('black')) and the title color to white (color='white'). You can modify these values to your preferred colors.
